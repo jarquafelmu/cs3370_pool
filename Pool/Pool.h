@@ -19,9 +19,13 @@
 class Pool {
   char** pool_list_ { nullptr };
   char* free_list_ { nullptr };
-  size_t elem_size_;
-  size_t block_size_;
 
+  size_t pool_capacity_ {};
+  size_t elem_size_ {};
+  size_t block_size_ {};
+
+  auto grow () -> void;
+  auto link ( char* ) -> void;
 public:
   Pool ( size_t const& elem_size, size_t const& block_size = 5 );
   ~Pool ();
@@ -29,6 +33,7 @@ public:
   auto deallocate ( void* ) -> void; // free an object's slot (push the address on the "free list")
 
   static auto profile ()-> void;
+
 };
 #endif // POOL_H
 

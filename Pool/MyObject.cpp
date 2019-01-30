@@ -23,11 +23,10 @@ MyObject* MyObject::create( const int& id, const string& name ) {
 
 auto MyObject::operator new( size_t size ) -> void* {
   // calls pool's allocate
-  return pool_.allocate ();
+  return nullptr;
 }
 auto MyObject::operator delete( void* p ) -> void {
   // calls pool's deallocate
-  pool_.deallocate ( p );
 }
 
 auto MyObject::profile() -> void {
@@ -36,6 +35,5 @@ auto MyObject::profile() -> void {
 
 auto operator<<( ostream& out, MyObject const& my_object ) -> ostream& {
   // display's this object's data
-  //out << "Id: " << my_object.id_ << ", Name: " << my_object.name_;
   return out;
 }
