@@ -120,6 +120,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyObject.cpp" />
+    <ClCompile Include="Pool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyObject.h" />
+    <ClInclude Include="Pool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
