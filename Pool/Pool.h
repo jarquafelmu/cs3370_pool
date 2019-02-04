@@ -15,24 +15,31 @@
 #define POOL_H
 
 #include <cstddef>
+#include <iosfwd>
+#include <iostream>
 
 class Pool {
   char** pool_list_ { nullptr };
   char* free_list_ { nullptr };
 
-  size_t pool_capacity_ {};
-  size_t elem_size_ {};
-  size_t block_size_ {};
+  size_t size_ {};
+  size_t live_cells_ {};
+  size_t free_cells_ {};
 
-  auto grow () -> void;
-  auto link ( char* ) -> void;
+  size_t const elem_size_ {};
+  size_t const block_size_ {};
+  
+  static std::string format_address( void* p );
+
+  void grow();
+  void link( char* ) const;
 public:
   Pool ( size_t const& elem_size, size_t const& block_size = 5 );
   ~Pool ();
-  auto allocate () -> void*; // get a pointer inside a pre-allocated block for a new object
-  auto deallocate ( void* ) -> void; // free an object's slot (push the address on the "free list")
+  void* allocate(); // get a pointer inside a pre-allocated block for a new object
+  void deallocate( void* ); // free an object's slot (push the address on the "free list")
 
-  static auto profile ()-> void;
+  void profile();
 
 };
 #endif // POOL_H

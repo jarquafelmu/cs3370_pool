@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Pool MyObject::pool_ { 
+Pool MyObject::Pool_ { 
   // provide pool with the size of the MyObject class  
   sizeof ( MyObject ) 
 };
@@ -16,24 +16,27 @@ MyObject::MyObject ( int const& i, string nm ) : name_ { std::move ( nm ) } {
   id_ = i;
 }
 
-MyObject* MyObject::create( const int& id, const string& name ) {
-  // create a new object of this class
+MyObject* MyObject::Create( const int& id, const string& name ) {
+  // Create a new object of this class
   return new MyObject ( id, name );
 }
 
 auto MyObject::operator new( size_t size ) -> void* {
   // calls pool's allocate
-  return nullptr;
+  return Pool_.allocate ();
 }
 auto MyObject::operator delete( void* p ) -> void {
   // calls pool's deallocate
+  Pool_.deallocate ( p );
 }
 
-auto MyObject::profile() -> void {
-  // call's pool's profile data member.
+auto MyObject::Profile() -> void {
+  // call's pool's Profile data member.
+ Pool_.profile ();
 }
 
 auto operator<<( ostream& out, MyObject const& my_object ) -> ostream& {
   // display's this object's data
+  out << "{" << my_object.id_ << "," << my_object.name_ << "}";
   return out;
 }

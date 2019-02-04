@@ -25,10 +25,10 @@ class MyObject {
   // data members
   int id_;
   string name_;
-  static Pool pool_;
+  static Pool Pool_;
 
   // private constructor so that users are forced 
-  // to use our create factory function
+  // to use our Create factory function
   MyObject( int const& i, string nm );
 public:
   // constructors / deconstructors
@@ -39,12 +39,13 @@ public:
   // overloaded operators
   auto operator=( MyObject const& other )->MyObject& = delete;
   auto operator=( MyObject&& other ) noexcept->MyObject& = delete;
+
   auto operator new( size_t size ) -> void*;
   auto operator delete( void* ) -> void;
   friend auto operator<<( ostream& out, MyObject const& my_object )->ostream&;
 
   // methods
-  static MyObject* create ( const int& id, const string& name );
-  static auto profile() -> void;
+  static MyObject* Create ( const int& id, const string& name );
+  static auto Profile() -> void;
 };
 #endif // MY_OBJECT_H
