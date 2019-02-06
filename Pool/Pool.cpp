@@ -46,6 +46,7 @@
 #include "Pool.h"
 #include <algorithm>
 #include <sstream>
+#include <cassert>
 
 using namespace std;
 
@@ -65,11 +66,10 @@ Pool::~Pool() {
   cout << "Deleting " << size_ << " blocks." << endl;
 
   // delete the blocks
-  for ( size_t i {}; i < size_; ++i ) { delete pool_list_[i]; }
+  for ( size_t i {}; i < size_; ++i ) { delete [] pool_list_[i]; }
 
   // delete the pool
   delete [] pool_list_;
-
 }
 
 /// <summary>
@@ -87,6 +87,7 @@ void* Pool::allocate() {
   cout << "Cell allocated at " << format_address ( retVal ) << endl;
 
   // move free_list_ to the next spot to the right   
+  assert ( free_list_ != nullptr );
   free_list_ = *reinterpret_cast<char**> ( free_list_ );
 
   ++live_cells_;
@@ -101,11 +102,13 @@ void* Pool::allocate() {
 /// </summary>
 /// <param name="p">The pointer that should be freed up.</param>
 void Pool::deallocate( void* p ) {
+  assert ( p != nullptr );
+
   cout << "Cell deallocated at " << format_address ( p ) << endl;
 
   new ( p ) char* { free_list_ };
 
-  free_list_ = static_cast<char*> ( p );
+  free_list_ = reinterpret_cast<char*> ( p );
 
   if ( live_cells_ > 0 ) --live_cells_;
   ++free_cells_;
@@ -115,11 +118,15 @@ void Pool::deallocate( void* p ) {
 /// Profiles this instance.
 /// </summary>
 void Pool::profile() const {
+  assert ( live_cells_ >= 0 );
+  assert ( free_cells_ >= 0 );
+
   // tell the user how many live and free cells exist
   cout << endl << "Live Cells: " << live_cells_ << ", Free Cells: " << free_cells_ << endl;
 
   // walk the free_list_ chain and show each address
   cout << "Free list:" << endl;
+
   auto iterator = free_list_;
   while ( iterator != nullptr ) {
     cout << format_address ( iterator ) << endl;
